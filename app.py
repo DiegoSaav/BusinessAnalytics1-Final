@@ -9,6 +9,17 @@ from matplotlib import figure
 from PIL import Image 
 
 
+#####################################################DESCOMPRIMIR ARCHIVO ZIP######################################3
+
+from zipfile import ZipFile
+
+test_file_name = "conflicto.zip"
+
+with ZipFile(test_file_name, 'r') as zip:
+    zip.printdir()
+    zip.extractall() 
+
+
 ######################## CONFIGURACIÓN DE LA CONFIGURACIÓN DE LA PÁGINA EN MODO ANCHO Y ADICIÓN DE UN TÍTULO Y FAVICON#############################################
 st.set_page_config(
     layout="wide", 
