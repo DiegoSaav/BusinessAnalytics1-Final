@@ -4,6 +4,6 @@ streamlit
 pydeck
 plotly
 matplotlib
-PIL
+
 
 
