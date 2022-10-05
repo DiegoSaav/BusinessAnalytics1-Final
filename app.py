@@ -211,7 +211,7 @@ with c2:
         yaxis_title = 'VICTIMAS',
         template = 'simple_white',
         title_x = 0.5,
-        legend_title = 'Víctimas según barrio:')
+        legend_title = 'Víctimas según dpto.:')
 
     c2.write(fig)
 
