@@ -18,6 +18,19 @@ st.set_page_config(
     )
 
 ################################################################################CARGAR DATOS#####################################################################
+
+#Descomprime el zip y desempaqueta el csv
+from zipfile import ZipFile
+
+test_file_name = "conflicto.zip"
+
+with ZipFile(test_file_name, 'r') as zip:
+    zip.extractall() 
+
+
+
+
+
 @st.cache
 def load_data1():
     data = pd.read_csv(
