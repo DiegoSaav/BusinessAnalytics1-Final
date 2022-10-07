@@ -9,17 +9,6 @@ from matplotlib import figure
 from PIL import Image 
 
 
-#####################################################DESCOMPRIMIR ARCHIVO ZIP######################################3
-
-from zipfile import ZipFile
-
-test_file_name = "conflicto.zip"
-
-with ZipFile(test_file_name, 'r') as zip:
-    zip.printdir()
-    zip.extractall() 
-
-
 ######################## CONFIGURACIÓN DE LA CONFIGURACIÓN DE LA PÁGINA EN MODO ANCHO Y ADICIÓN DE UN TÍTULO Y FAVICON#############################################
 st.set_page_config(
     layout="wide", 
@@ -43,25 +32,33 @@ def load_data2():
     )
     return data
 
+@st.cache(allow_output_mutation=True)
+def load_data3():
+    data = pd.read_csv(
+        "red.csv"
+    )
+    return data
+
 df = load_data1() 
 co = load_data2()
+red = load_data3()
 
 ##############################################################TITULOS Y TEXTOS INTRODUCTORIOS####################################################
 
 c1, c2 = st.columns(2) # Dividir el ancho en 2 columnas de igual tamaño
 
 with c1:
-    c1.title('\U0001f50e Análisis exploratorio de la conectividad y las víctimas del conflicto armado en Colombia')
+    c1.title('\U0001f50e Influencia del conflicto armado sobre la conectividad digital en Colombia')
 
 with c2:
     c2.markdown("""
 
-    El acceso a internet se ha vuelto esencial, pues le ha abierto camino a nuevas formas de crear conocimiento y de relacionarse, 
-    en países como el nuestro, que estamos en una transición a una cultura más digital, lo que nos lleva a múltiples cambios en todas las 
-    esferas sociales, además de ser un país golpeado fuertemente por la violencia. 
-
-    Por esta razón se desea analizar las diferencias que hay en las zonas rurales y urbanas en colombia con respecto a la violencia 
-    (conflicto armado) y si este problema tiene influencia sobre la tendencia del internet.
+    El acceso a internet se ha vuelto esencial para todos, ya que abre camino a nuevas formas de crear conocimiento y de relacionarnos, 
+    es por eso que en países como el nuestro, nos vemos obligados a realizar una transición prioritaria a una cultura más digital, 
+    realizando cambios en todas las esferas sociales pero teniendo en cuenta que Colombia ha sido fuertemente golpeado por la violencia en su historia. 
+    
+    Por esta razón se desea analizar las diferencias que hay en las zonas rurales y urbanas en Colombia con respecto 
+    a la violencia, en particular el conflicto armado, y si esta problemática influye en el acceso a internet.
 
         """)
 
@@ -71,6 +68,8 @@ st.write('')
 ##########################################################################FILA############################################################
 
 total = 250770
+
+
 
 #Imagen
 img = Image.open("bandera.png")
@@ -94,7 +93,7 @@ c1, c2, c3 = st.columns(3)
 
 
 with c1:
-    text = 'Víctimas x modalidad más violenta'
+    text = 'Víctimas por modalidad más violenta'
     st.markdown(f"<h5 style='text-align: center; color:white;'>{text}</h5>", unsafe_allow_html=True)
 
     number = 37125
@@ -112,7 +111,7 @@ with c1:
 
 
 with c2:
-    text = 'Víctimas x presunto más violento'
+    text = 'Víctimas por presunto más violento'
     st.markdown(f"<h5 style='text-align: center; color:white;'>{text}</h5>", unsafe_allow_html=True)
 
     number = 32179
@@ -129,7 +128,7 @@ with c2:
     st.image(img, width=None)
 
 with c3:
-    text = 'Víctimas x dpto. más violento'
+    text = 'Víctimas por dpto. más violento'
     st.markdown(f"<h5 style='text-align: center; color:white;'>{text}</h5>", unsafe_allow_html=True)
 
     number = 71899
@@ -160,7 +159,7 @@ st.write('')
 c1, c2 = st.columns(2)
 
 with c1:
-    c1.markdown("<h3 style='text-align: center; color: white;'> EVOLUCIÓN ANUAL DE LAS VÍCTIMAS DEL CONFLICTO ARMADO EN COLOMBIA </h3>", unsafe_allow_html=True)
+    c1.markdown("<h3 style='text-align: center; color: white;'> EVOLUCIÓN ANUAL DE LAS VÍCTIMAS DEL CONFLICTO ARMADO EN COLOMBIA </>", unsafe_allow_html=True)
 
     #Base de datos para la gráfica
     base = co.groupby('año')  [['Total de Víctimas del Caso']].sum().sort_values(by='año', ascending=False).reset_index()
@@ -182,7 +181,7 @@ with c1:
 
 with c2:
 
-    c2.markdown("<h3 style='text-align: center; color: white;'> EVOLUCIÓN ANUAL DE LAS VÍCTIMAS POR DEPARTAMENTO </h3>", unsafe_allow_html=True)
+    c2.markdown("<h3 style='text-align: center; color: white;'> EVOLUCIÓN ANUAL DE LAS VÍCTIMAS POR DEPARTAMENTO </>", unsafe_allow_html=True)
 
 
     #Agrupamos por categoria
@@ -211,7 +210,7 @@ with c2:
         yaxis_title = 'VICTIMAS',
         template = 'simple_white',
         title_x = 0.5,
-        legend_title = 'Víctimas según dpto.:')
+        legend_title = 'Víctimas según departamento:')
 
     c2.write(fig)
 
@@ -317,7 +316,7 @@ c1, c2 = st.columns(2)
 
 with c1:
     #Titulo
-    c1.markdown("<h3 style='text-align: center; color: white;'> ¿CUÁLES SON LOS DPTOS. MÁS CRÍTICOS? </h3>", unsafe_allow_html=True)
+    c1.markdown("<h4 style='text-align: center; color: white;'> ¿CUÁLES SON LOS DPTOS. MÁS CRÍTICOS? </>", unsafe_allow_html=True)
 
     #Base para figura
     base = co.groupby(['DEPARTAMENTO'])[['Total de Víctimas del Caso']].sum().reset_index().sort_values('Total de Víctimas del Caso', ascending = False).head(5)
@@ -344,11 +343,11 @@ with c1:
 
 with c2:
     #Titulo
-    c2.markdown("<h3 style='text-align: center; color: white;'> ¿CUÁLES SON LOS MUNICIPIOS MÁS CRÍTICOS? </h3>", unsafe_allow_html=True)
+    c2.markdown("<h4 style='text-align: center; color: white;'> ¿CUÁLES SON LOS MUNICIPIOS MÁS CRÍTICOS? </>", unsafe_allow_html=True)
     
 
     dep_options = co['DEPARTAMENTO'].unique().tolist() #Lista para el desplegable
-    dep = c2.selectbox('¿Cuál departamento desea observar?', sorted(dep_options)) #Desplegable de los departamentos
+    dep = c2.selectbox('Departamento:', sorted(dep_options)) #Desplegable de los departamentos
     df2 = co[co['DEPARTAMENTO']==dep] # Filtrar DataFrame con el departamento seleccionado en la lista desplegable
 
 
@@ -389,6 +388,16 @@ st.write('')
 st.write('')
 st.write('')
 
+#Calcular el total
+total = df2['Total de Víctimas del Caso'].sum()
+#Mostrar el total
+st.markdown(f"<h2 style='text-align: center; color:red;'>{total} víctimas totales </>", unsafe_allow_html=True)
+
+
+
+st.write('')
+st.write('')
+st.write('')
 #División de columnas
 c1, c2, c3 = st.columns(3)
 
@@ -421,11 +430,6 @@ with c1:
     #Gráfica a dash
     c1.write(fig)
 
-    #Calcular el total
-    total = df2['Total de Víctimas del Caso'].sum()
-    #Mostrar el total
-    c1.markdown(f"<h5 style='text-align: center; color:white;'>Total = {total} víctimas en {dep} </h5>", unsafe_allow_html=True)
-
 
 with c2:
     #Titulo
@@ -452,9 +456,9 @@ with c2:
 
 with c3:
 
-    c3.markdown(f"<h4 style='text-align: center; color:white;'>TABLA DE AÑOS CON MÁS VÍCTIMAS </h4>", unsafe_allow_html=True)
+    c3.markdown(f"<h4 style='text-align: center; color:white;'>TOP 20 TABLA DE AÑOS CON MÁS VÍCTIMAS Y MUNICIPIOS </h4>", unsafe_allow_html=True)
 
-    base = df2.groupby(['año', 'MUNICIPIO'])  [['Total de Víctimas del Caso']].sum().reset_index().sort_values('Total de Víctimas del Caso', ascending=False).head(10)
+    base = df2.groupby(['año', 'MUNICIPIO'])  [['Total de Víctimas del Caso']].sum().reset_index().sort_values('Total de Víctimas del Caso', ascending=False).head(20)
 
     fig = go.Figure(data=[go.Table(
             header=dict(values=list(base.columns),
@@ -467,7 +471,282 @@ with c3:
             line_color='darkslategray'))
         ])
 
-    fig.update_layout(width=450, height=700)
+    fig.update_layout(width=450, height=600)
 
 
     c3.write(fig)
+
+
+############################################################FILA 6######################################################################################
+
+text = 'Acceso a internet en Colombia'
+st.markdown(f"<h1 style='text-align: center; color:white;'>{text}</h1>", unsafe_allow_html=True)
+
+c1, c2 = st.columns(2)
+
+
+with c1:
+
+    #Titulo
+    st.markdown("<h4 style='text-align: center; color: white;'> PARETO DE LOS USUARIOS ACTIVOS AL MES POR DPTO. </>", unsafe_allow_html=True)
+
+    #Base para figura
+    df0 = df.groupby(['DEPARTAMENTO'])[['USUARIOS_ACTIVOS_MES']].sum().sort_values('USUARIOS_ACTIVOS_MES', ascending = False)
+    df0['ratio'] = df0.apply(lambda x: x.cumsum()/df0['USUARIOS_ACTIVOS_MES'].sum())
+
+    #Crear figura
+    fig = go.Figure([go.Bar(x=df0.index, y=df0['USUARIOS_ACTIVOS_MES'], yaxis='y1', name='N° Usuarios'),
+                    go.Scatter(x=df0.index, y=df0['ratio'], yaxis='y2', name='Usuarios Activos', hovertemplate='%{y:.1%}', marker={'color': '#FF0000'})])
+    #Detalles figura
+    fig.update_layout(template='plotly_dark', showlegend=False, hovermode='x', bargap=.3, 
+                    yaxis={'title': 'N° Usuarios Activos'},
+                    yaxis2={'rangemode': "tozero", 'overlaying': 'y', 'position': 1, 'side': 'right', 'title': 'Ratio', 'tickvals': np.arange(0, 1.1, .2), 'tickmode': 'array', 'ticktext': [str(i) + '%' for i in range(0, 101, 20)]},
+                    width=750, height=600)
+
+    #Enviar gráfica a streamlit
+    st.write(fig)
+
+with c2:
+    #Titulo
+    text = 'TOTAL DE PERSONAS SENSIBILIZADAS AL USO DEL INTERNET POR DEPARTAMENTO'
+    st.markdown(f"<h4 style='text-align: center; color:white;'>{text}</>", unsafe_allow_html=True)
+
+    #Base para figura
+    red.rename(columns = {'DEPARTAME_NOMBRE' : 'DEPARTAMENTO'}, inplace = True)
+    red.rename(columns = {'INVERSION_TOTAL' : 'INVERSION'}, inplace = True)
+    red.rename(columns = {'TotalPersonasSencibilizadas' : 'SENSIBILIZACION'}, inplace = True)
+    red['DEPARTAMENTO'] = red['DEPARTAMENTO'].replace({'NARI�O': 'NARIÑO'})
+
+
+    base = red.groupby(['DEPARTAMENTO'])[['SENSIBILIZACION']].sum().reset_index().sort_values('SENSIBILIZACION', ascending = False)
+
+    #Crear figura
+    fig = px.bar(base, x='DEPARTAMENTO', y='SENSIBILIZACION')
+
+    #Detalles figura
+    fig.update_layout(
+        #xaxis_title = 'Departamentos',
+        yaxis_title = 'Cantidad',
+        template = 'simple_white',
+        title_x = 0.5,
+        width=650, height=600)
+
+    #Enviar gráfica a streamlit
+    st.write(fig)
+
+
+############################################################FILA 7######################################################################################
+text = 'Relación entre los centros digitales y la cantidad de victimas'
+st.markdown(f"<h1 style='text-align: center; color:white;'>{text}</>", unsafe_allow_html=True)
+
+#Titulo
+st.markdown("<h4 style='text-align: center; color: white;'> N° DE VÍCTIMAS VS. N° DE CENTROS DIGITALES POR DEPARTAMENTO </>", unsafe_allow_html=True)
+
+#Base para figura
+CEN_T = df.groupby(['DEPARTAMENTO'])[['MUNICIPIO']].count().rename(columns = {'MUNICIPIO' : 'CANT_CENTRO_DIGITAL'}).sort_values('CANT_CENTRO_DIGITAL', ascending = False).reset_index()
+VIC_T =co.groupby(['DEPARTAMENTO'])[['Total de Víctimas del Caso']].sum().rename(columns = {'Total de Víctimas del Caso' : 'CANT_VICTIMAS'}).sort_values('CANT_VICTIMAS', ascending = False).reset_index()
+CDV_AR = pd.merge(VIC_T,CEN_T, on = 'DEPARTAMENTO', how = 'left' )
+CDV_AR['PROP_VICT'] = (CDV_AR['CANT_VICTIMAS']-CDV_AR['CANT_VICTIMAS'].min())/(CDV_AR['CANT_VICTIMAS'].max()-CDV_AR['CANT_VICTIMAS'].min())
+
+#Crear figura
+fig9 = px.scatter(CDV_AR, x = 'CANT_VICTIMAS', y ='CANT_CENTRO_DIGITAL', color = 'DEPARTAMENTO',
+           size = 'PROP_VICT')
+#Detalles figura
+fig9.update_layout(
+    xaxis_title = 'N° de Víctimas',
+    yaxis_title = 'N° de centros digitales',
+    template = 'seaborn',
+    title_x = 0.5,
+    width=1200, height=600)
+
+#Enviar gráfica a streamlit
+st.write(fig9)
+
+############################################################FILA 8######################################################################################
+text = 'Relación entre dificultad de acceso y tipo de zona'
+st.markdown(f"<h1 style='text-align: center; color:white;'>{text}</>", unsafe_allow_html=True)
+
+
+
+c1, c2 = st.columns(2)
+
+with c1:
+    #Titulo
+    text = 'Dificultad de acceso a internet según el departamento'
+    st.markdown(f"<h4 style='text-align: center; color:white;'>{text}</>", unsafe_allow_html=True)
+
+
+    dep_options = df['DEPARTAMENTO'].unique().tolist() #Lista para el desplegable
+    dep = st.selectbox('Departamento:', sorted(dep_options)) #Desplegable de los departamentos
+    df2 = df[df['DEPARTAMENTO']==dep] # Filtrar DataFrame con el departamento seleccionado en la lista desplegable
+
+    #Base para figura
+    base = df2.groupby(['DIFICULTADACCESO'])[['ZONA']].count().reset_index()
+    cant=df2['ZONA'].count()
+
+    #Crear figura
+    fig = px.pie(base, values = 'ZONA',names ='DIFICULTADACCESO', hole = 0.5)
+
+    #Detalles figura
+    fig.update_layout(
+        template = 'ggplot2',
+        legend_title = 'DIFITULTAD DE ACCESO',
+        title_x = 0.5,
+        annotations =[dict(text = str(cant), x=0.5, y=0.5, font_size=40,showarrow=False)],
+        legend=dict(orientation="h",
+        yanchor="bottom",
+        y=-0.3,
+        xanchor="center",
+        x=0.5),
+        width=500, height=500)
+
+    #Enviar gráfica a streamlit
+    st.write(fig)
+
+
+############################################################FILA 9######################################################################################
+
+with c2:
+    st.markdown(f"<h4 style='text-align: center; color:white;'>Tabla de cantidad de zonas rurales y urbanas por departamento </>", unsafe_allow_html=True)
+
+    #Base para la tabla
+    base = df.groupby(['DEPARTAMENTO','ZONA'])[['VELOCIDAD_SUBIDA']].count().rename(columns = {'VELOCIDAD_SUBIDA' : 'CANTIDAD DE REGISTROS'}).reset_index()
+
+    #Crear tabla
+    fig = go.Figure(data=[go.Table(
+                header=dict(values=list(base.columns),
+                fill_color='black',
+                font_color='white',
+                line_color='darkslategray'),
+                cells=dict(values=[base['DEPARTAMENTO'], base['ZONA'],base['CANTIDAD DE REGISTROS']],
+                fill_color='black',
+                font_color='white',
+                line_color='darkslategray'))
+            ])
+
+    fig.update_layout(
+        width=500, height=500)
+
+
+    #Enviar gráfica a streamlit
+    st.write(fig)
+
+
+##########################################################FILA 10#####################################################################           
+#Titulo
+text = 'Relación entre la velocidad del internet y la zona (rural o urbana) por departamento.'
+st.markdown(f"<h1 style='text-align: center; color:white;'>{text}</>", unsafe_allow_html=True)
+
+c1, c2 = st.columns(2)
+
+with c1:
+    c1.markdown("<h4 style='text-align: center; color: white;'> 🔺 VELOCIDAD DE SUBIDA DE CADA DEPARTAMENTO POR ZONA </>", unsafe_allow_html=True)
+
+    #Base de datos para la gráfica
+    base = df.groupby(['DEPARTAMENTO','ZONA'])[['VELOCIDAD_SUBIDA']].mean().reset_index().sort_values('VELOCIDAD_SUBIDA', ascending = False)
+
+    #Creación de gráfica
+    fig1 = px.bar(base, x = 'DEPARTAMENTO', y='VELOCIDAD_SUBIDA', color ='ZONA',barmode ='group')
+    
+    #Detalles
+    fig1.update_layout(
+    xaxis_title = 'Departamento',
+    yaxis_title = 'Velocidad de subida',
+    template = 'plotly_dark',
+    title_x = 0.5,
+    legend=dict(orientation="h",
+        yanchor="top",
+        y=-0.5,
+        xanchor="center",
+        x=0.5),
+    width=666, height=666)
+
+    c1.write(fig1)
+
+with c2:
+    c2.markdown("<h4 style='text-align: center; color: white;'> 🔻 VELOCIDAD DE BAJADA DE CADA DEPARTAMENTO POR ZONA </>", unsafe_allow_html=True)
+
+    #Base de datos para la gráfica
+    base = df.groupby(['DEPARTAMENTO','ZONA'])[['VELOCIDAD_BAJADA']].mean().reset_index().sort_values('VELOCIDAD_BAJADA', ascending = False)
+
+    #Creación de gráfica
+    fig1 = px.bar(base, x = 'DEPARTAMENTO', y='VELOCIDAD_BAJADA', color ='ZONA',barmode ='group')
+    
+    #Detalles
+    fig1.update_layout(
+    xaxis_title = 'Departamento',
+    yaxis_title = 'Velocidad de bajada',
+    template = 'plotly_dark',
+    title_x = 0.5,
+    legend=dict(orientation="h",
+        yanchor="top",
+        y=-0.5,
+        xanchor="center",
+        x=0.5),
+    width=666, height=666)
+
+    c2.write(fig1)
+            
+##########################################################FILA 11#####################################################################
+#Titulo
+text = 'Relación entre el tráfico de usuarios y la zona (rural o urbana) por departamento.'
+st.markdown(f"<h1 style='text-align: center; color:white;'>{text}</>", unsafe_allow_html=True)
+
+c1, c2 = st.columns(2)
+
+with c1:
+    c1.markdown("<h4 style='text-align: center; color: white;'> 🔺 TRÁFICO DE SUBIDA DE CADA DEPARTAMENTO POR ZONA </>", unsafe_allow_html=True)
+
+    #Base de datos para la gráfica
+    base = df.groupby(['DEPARTAMENTO','ZONA'])[['TRAFICO_MENSUAL_SUBIDA']].mean().reset_index().sort_values('TRAFICO_MENSUAL_SUBIDA', ascending = False)
+
+    #Creación de gráfica
+    fig1 = px.bar(base, x = 'DEPARTAMENTO', y='TRAFICO_MENSUAL_SUBIDA', color ='ZONA',barmode ='group')
+    
+    #Detalles
+    fig1.update_layout(
+    xaxis_title = 'Departamento',
+    yaxis_title = 'Tráfico mensual de subida',
+    template = 'plotly_dark',
+    title_x = 0.5,    
+    legend=dict(orientation="h",
+        yanchor="top",
+        y=-0.5,
+        xanchor="center",
+        x=0.5),
+    width=666, height=666)
+
+    c1.write(fig1)
+
+with c2:
+    c2.markdown("<h4 style='text-align: center; color: white;'> 🔻 TRÁFICO DE BAJADA DE CADA DEPARTAMENTO POR ZONA </>", unsafe_allow_html=True)
+
+    #Base de datos para la gráfica
+    base = df.groupby(['DEPARTAMENTO','ZONA'])[['TRAFICO_MENSUAL_BAJADA']].mean().reset_index().sort_values('TRAFICO_MENSUAL_BAJADA', ascending = False)
+
+    #Creación de gráfica
+    fig1 = px.bar(base, x = 'DEPARTAMENTO', y='TRAFICO_MENSUAL_BAJADA', color ='ZONA',barmode ='group')
+    
+    #Detalles
+    fig1.update_layout(
+    xaxis_title = 'Departamento',
+    yaxis_title = 'Tráfico mensual de bajada',
+    template = 'plotly_dark',
+    title_x = 0.5,    
+    legend=dict(orientation="h",
+        yanchor="top",
+        y=-0.5,
+        xanchor="center",
+        x=0.5),
+    width=666, height=666)
+
+    c2.write(fig1)
+
+
+
+
+
+
+
+
+
