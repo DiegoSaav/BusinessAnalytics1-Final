@@ -1,0 +1,3 @@
+link para abrir el BigQuery 
+https://console.cloud.google.com/bigquery?sq=622499173522:3968647b5d044b469be04149ba1f3b95
+para ejecutar entrega #1
